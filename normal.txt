@@ -1,0 +1,30 @@
+ubs@gmail.com
+Ubs@2606
+
+jayeshpanchasara.ubs@gmail.com
+Jayesh@2606
+
+
+
+// class NotificationItem {
+//   final String name;
+//   final String title;
+
+//   NotificationItem(this.name, this.title);
+// }
+
+// // Sample data
+// final List<NotificationItem> sampleNotifications = [
+//   NotificationItem("Maureen Robel", "has voted on your poll."),
+//   NotificationItem("Kim Bayer", "has commented on your poll."),
+//   NotificationItem("Richard Runolfsson",
+//       "has commented on your poll. has commented on your poll has commented on your poll"),
+//   NotificationItem("Jared Moen", "has voted on your poll."),
+//   NotificationItem("Saul Windler", "has commented on your poll."),
+//   NotificationItem("Viola Krajcik", "has voted on your poll."),
+//   NotificationItem("Julian Gislason", "has commented on your poll."),
+//   NotificationItem("Kenny Bins", "has voted on your poll."),
+//   NotificationItem("Kay Wilkinson PhD", "has voted on your poll."),
+//   NotificationItem("Miss Marc Harvey", "has commented on your poll."),
+// ];
+

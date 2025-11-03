@@ -1,0 +1,62 @@
+{
+    "project_info": {
+        "project_number": "301803721911",
+        "project_id": "fanpoll-6e35e",
+        "storage_bucket": "fanpoll-6e35e.firebasestorage.app"
+    },
+    "client": [
+        {
+            "client_info": {
+                "mobilesdk_app_id": "1:301803721911:android:12f1026ee373f48890a932",
+                "android_client_info": {
+                    "package_name": "com.fanpoll.fan_poll"
+                }
+            },
+            "oauth_client": [
+                {
+                    "client_id": "301803721911-2ij37528gg86aka5gkfgkhmr13evh9ur.apps.googleusercontent.com",
+                    "client_type": 1,
+                    "android_info": {
+                        "package_name": "com.fanpoll.fan_poll",
+                        "certificate_hash": "abefa365ab160bb02f8681d7e99f9d10b7a1cd89"
+                    }
+                },
+                {
+                    "client_id": "301803721911-gsakbicjgasc8gr95or9uvckcprdmoa6.apps.googleusercontent.com",
+                    "client_type": 1,
+                    "android_info": {
+                        "package_name": "com.fanpoll.fan_poll",
+                        "certificate_hash": "838b322a8cb87f071f7c9ddfb398e8cb15f04871"
+                    }
+                },
+                {
+                    "client_id": "301803721911-kdd6n18mhpuhu2086qj3r1g51k7l6evb.apps.googleusercontent.com",
+                    "client_type": 3
+                }
+            ],
+            "api_key": [
+                {
+                    "current_key": "AIzaSyAXJL1jaE2HqZ9VaBul6wIvKu0RNUMJQX8"
+                }
+            ],
+            "services": {
+                "appinvite_service": {
+                    "other_platform_oauth_client": [
+                        {
+                            "client_id": "301803721911-kdd6n18mhpuhu2086qj3r1g51k7l6evb.apps.googleusercontent.com",
+                            "client_type": 3
+                        },
+                        {
+                            "client_id": "301803721911-mhi1e68ujjn4cqurpd2qfj1oajfgko65.apps.googleusercontent.com",
+                            "client_type": 2,
+                            "ios_info": {
+                                "bundle_id": "com.fanpoll.fanPoll"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "configuration_version": "1"
+}
