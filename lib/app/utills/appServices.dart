@@ -10,7 +10,7 @@ import 'localStorageService.dart';
 
 class ApiService {
   //static final String baseUrl = 'https://fpw.zbit.ltd/api/';
-  static final String baseUrl = 'https://api.fanpollworld.com/api/';
+  static final String baseUrl = 'https://fanpoll-backend-production.up.railway.app/api/';
 
   Future<dynamic> getProfile(String token) async {
     final uri = Uri.parse('${baseUrl}profile');

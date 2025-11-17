@@ -1,0 +1,143 @@
+# FanPoll Application Deployment Guide
+
+## 📱 Application Overview
+FanPoll is a Flutter-based polling application with a PHP/MySQL backend.
+
+### 🔗 Live URLs
+- **Frontend App**: https://fanpoll-flutter-6z77-git-main-chaithus-projects-ac727576.vercel.app/#/login
+- **Vercel Dashboard**: https://vercel.com/chaithus-projects-ac727576/fanpoll-flutter-6z77/H9AW1QqGFwFidc9rRsLwnq3QzjWN
+- **GitHub Repositories**: https://github.com/iamchaitu7?tab=repositories
+- **Railway Backend**: https://railway.com/project/fb4912a3-1863-4396-a98d-0bf1d2a90053?environmentId=ad4cfc54-b963-49f9-b226-16ad4fbe9fe3
+
+---
+
+## 💰 Pricing Structure
+| Service | Cost | Notes |
+|---------|------|-------|
+| **Vercel** | Free | Flutter app hosting |
+| **Railway** | Free for 1 month, then $5-20/month | Database + Backend hosting |
+
+---
+
+## 🚀 Deployment Architecture
+
+```
+GitHub Repositories:
+├── fanpoll-flutter (Flutter source code)
+├── fanpoll-backend (PHP + MySQL backend)
+└── fanpoll-web-build (Built web version)
+```
+
+---
+
+## 📋 Step-by-Step Deployment Process
+
+### Step 1: Create GitHub Repositories
+
+1. **Go to GitHub.com** and create 2 repositories:
+   - `fanpoll-flutter` - For Flutter app source code
+   - `fanpoll-backend` - For PHP + MySQL backend
+
+2. **Push existing code** to respective repositories.
+
+### Step 2: Build Flutter Web Version
+
+```bash
+# Navigate to your Flutter project
+cd "flutter/fan_poll_flutter-main"
+
+# Build web version
+flutter build web --release
+
+# Create build directory and copy files
+mkdir ../fanpoll-web-build
+cp -r build/web/* ../fanpoll-web-build/
+cp vercel.json ../fanpoll-web-build/
+```
+
+### Step 3: Create Web Build Repository
+
+1. **Create new GitHub repository**: `fanpoll-web-build`
+2. **Don't initialize with README**
+
+### Step 4: Push Built Files
+
+```bash
+# Navigate to build directory
+cd ../fanpoll-web-build
+
+# Initialize git and push
+git init
+git add .
+git commit -m "Flutter web build"
+git remote add origin https://github.com/iamchaitu7/fanpoll-web-build.git
+git branch -M main
+git push -u origin main
+```
+
+### Step 5: Deploy to Vercel
+
+1. **Connect** `fanpoll-web-build` repository to Vercel
+2. **No build command** needed (pre-built files)
+3. **Deploys instantly** 🎉
+
+---
+
+## 🔄 Update Process for New Changes
+
+### When making code changes:
+
+1. **Commit changes** to `fanpoll-flutter` repository
+2. **Rebuild web version**:
+   ```bash
+   flutter build web --release
+   cp -r build/web/* ../fanpoll-web-build/
+   ```
+3. **Push to web-build repo**:
+   ```bash
+   cd ../fanpoll-web-build
+   git add .
+   git commit -m "Update: [describe changes]"
+   git push origin main
+   ```
+4. **Vercel automatically redeploys**
+
+---
+
+## 🛠️ Service Configuration
+
+### Vercel (Frontend)
+- **Service**: Static hosting
+- **Cost**: Free
+- **Auto-deploys** from `fanpoll-web-build`
+
+### Railway (Backend)
+- **Service**: Database + PHP backend
+- **Cost**: Free trial → $5-20/month after
+- **Auto-deploys** from `fanpoll-backend`
+
+---
+
+## 📝 Important Notes
+
+1. **Always commit source code** to `fanpoll-flutter` repository
+2. **Only built files** go to `fanpoll-web-build`
+3. **Vercel doesn't support Flutter builds** - must pre-build
+4. **Railway charges after 1 month** - plan accordingly
+5. **Keep all three repositories synchronized**
+
+---
+
+## ✅ Quick Deployment Checklist
+
+- [ ] Create `fanpoll-flutter` repo and push source code
+- [ ] Create `fanpoll-backend` repo and push backend code
+- [ ] Build Flutter web version (`flutter build web --release`)
+- [ ] Create `fanpoll-web-build` repo and push built files
+- [ ] Connect `fanpoll-web-build` to Vercel
+- [ ] Connect `fanpoll-backend` to Railway
+- [ ] Test all endpoints and functionality
+
+---
+
+This setup ensures a smooth deployment pipeline with automatic updates whenever you push changes to the web-build repository. The separation of source code and built files optimizes the deployment process for Flutter web applications on Vercel.
