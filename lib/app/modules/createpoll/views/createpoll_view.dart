@@ -405,7 +405,7 @@ Widget _buildPreviewOption(String option, String percentage, {bool isHighlighted
     );
   }
 
-  Widget _buildMediaSection() {
+Widget _buildMediaSection() {
   return Column(
     children: [
       Row(
@@ -428,11 +428,11 @@ Widget _buildPreviewOption(String option, String percentage, {bool isHighlighted
         ],
       ),
       const SizedBox(height: 12),
-      Obx(
-        () => controller.selectedImage.value != null || controller.selectedByteImage.value != null
-            ? _buildSelectedImagePreview()
-            : const SizedBox(),
-      ),
+      
+      // FIX: Use the proper image preview method
+      Obx(() => controller.hasImageSelected
+          ? _buildSelectedImagePreview()
+          : _buildImagePlaceholder()),
     ],
   );
 }
@@ -466,54 +466,125 @@ Widget _buildPreviewOption(String option, String percentage, {bool isHighlighted
   }
 
   Widget _buildSelectedImagePreview() {
-    return Stack(
-      children: [
-        Container(
-          width: double.infinity,
-          height: 200,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: const Color(0x8022212F), width: 0.5),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Obx(
-              () => controller.selectedImage.value != null
-                  ? kIsWeb
-                      ? Image.memory(
-                          controller.selectedByteImage.value!,
-                          width: double.infinity,
-                          height: double.infinity,
-                          fit: BoxFit.cover,
-                        )
-                      : Image.file(
-                          controller.selectedImage.value!,
-                          width: double.infinity,
-                          height: double.infinity,
-                          fit: BoxFit.cover,
-                        )
-                  : const SizedBox(),
+  return Stack(
+    children: [
+      Container(
+        width: double.infinity,
+        height: 200,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: const Color(0x8022212F), width: 0.5),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Obx(() {
+            if (kIsWeb) {
+              return controller.selectedByteImage.value != null
+                  ? Image.memory(
+                      controller.selectedByteImage.value!,
+                      width: double.infinity,
+                      height: double.infinity,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return _buildErrorState();
+                      },
+                    )
+                  : _buildErrorState();
+            } else {
+              return controller.selectedImage.value != null
+                  ? Image.file(
+                      controller.selectedImage.value!,
+                      width: double.infinity,
+                      height: double.infinity,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return _buildErrorState();
+                      },
+                    )
+                  : _buildErrorState();
+            }
+          }),
+        ),
+      ),
+      Positioned(
+        top: 8,
+        right: 8,
+        child: GestureDetector(
+          onTap: () => controller.removeImage(),
+          child: Container(
+            padding: const EdgeInsets.all(6),
+            decoration: BoxDecoration(
+              color: Colors.black54,
+              borderRadius: BorderRadius.circular(20),
             ),
+            child: const Icon(Icons.close, color: Colors.white, size: 18),
           ),
         ),
-        Positioned(
-          top: 8,
-          right: 8,
-          child: GestureDetector(
-            onTap: () => controller.removeImage(),
-            child: Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: Colors.black54,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: const Icon(Icons.close, color: Colors.white, size: 16),
+      ),
+    ],
+  );
+}
+
+Widget _buildImagePlaceholder() {
+  return GestureDetector(
+    onTap: () {
+      // Allow tapping the placeholder to select image
+      controller.pickImageFromGallery();
+    },
+    child: Container(
+      width: double.infinity,
+      height: 200,
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0x8022212F), width: 0.5),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.photo_camera, size: 50, color: Colors.grey[500]),
+          const SizedBox(height: 8),
+          Text(
+            'Add Poll Image',
+            style: TextStyle(
+              color: Colors.grey[600],
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
             ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Tap to select from gallery',
+            style: TextStyle(
+              color: Colors.grey[500],
+              fontSize: 12,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget _buildErrorState() {
+  return Container(
+    color: Colors.grey[100],
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.error_outline, color: Colors.red, size: 40),
+        const SizedBox(height: 8),
+        Text(
+          'Failed to load image',
+          style: TextStyle(
+            color: Colors.grey[600],
+            fontSize: 14,
           ),
         ),
       ],
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildSourceLinkField() {
     return Container(
@@ -799,10 +870,12 @@ Widget _buildPublishButton() {
           final homeController = Get.find<HomeController>();
           final MainController mainController = Get.find<MainController>();
           
+          // FIX: Remove or properly define profileController
+          // final profileController = Get.find<ProfileController>(); // If you have one
+          
           if (controller.validateForm()) {
             controller.isLoading.value = true;
             try {
-              // Calculate expiration days properly
               int expiresInDays = controller.calculateExpirationDays();
               
               final response = await ApiService().postCreatePoll(
@@ -824,7 +897,8 @@ Widget _buildPublishButton() {
                 controller.resetForm();
                 controller.scrollToTop();
                 homeController.refreshPolls();
-                profileController.loadProfileAndPolls();
+                // FIX: Remove or fix this line
+                // profileController.loadProfileAndPolls();
                 mainController.changeTabIndex(0);
                 controller.isLoading.value = false;
               } else {
@@ -840,6 +914,8 @@ Widget _buildPublishButton() {
         },
       ));
 }
+
+
 
 Widget HashtagsWidget({
   required StringTagController controller,

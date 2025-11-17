@@ -494,7 +494,7 @@ class _PollCardState extends State<PollCard> {
                             text: widget.description,
                             style: CustomText.regular14(AppColor.SecondryColor),
                             onOpen: (link) async {
-                              String url = link.url.startsWith('http') ? link.url : 'http://${link.url}';
+                              String url = 'https://${link.url}';
                               if (await canLaunchUrl(Uri.parse(url))) {
                                 print("REDIRECT URL  : ${url}");
                                 await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);

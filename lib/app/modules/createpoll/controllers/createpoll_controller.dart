@@ -238,6 +238,30 @@ class CreatepollController extends GetxController {
     return selectedDate.difference(now).inDays;
   }
 
+  // Add these methods to check if image is selected
+bool get hasImageSelected {
+  return kIsWeb ? selectedByteImage.value != null : selectedImage.value != null;
+}
+
+// Get the image for preview
+dynamic get imageForPreview {
+  if (kIsWeb) {
+    return selectedByteImage.value;
+  } else {
+    return selectedImage.value;
+  }
+}
+
+// Get image file for upload
+Future<File?> get imageFileForUpload async {
+  if (kIsWeb) {
+    // For web, you'll need to handle the Uint8List differently
+    return null;
+  } else {
+    return selectedImage.value;
+  }
+}
+
 bool validateForm() {
   if (titleController.text.trim().isEmpty) {
     Get.snackbar('Error', 'Please enter poll question');
