@@ -141,3 +141,31 @@ git push -u origin main
 ---
 
 This setup ensures a smooth deployment pipeline with automatic updates whenever you push changes to the web-build repository. The separation of source code and built files optimizes the deployment process for Flutter web applications on Vercel.
+
+flutter run -d chrome --web-port 8000
+uploads\profile_pictures\default-profile.jpg
+
+CLOUDINARY_URL=cloudinary://843928838599374:OLVumN-Qq5SxwIlpQRgtPzG_ims@dq9zl6oob
+
+download flutter from website and set path it will work
+
+downlaod 3 repos 
+
+fanpoll-backend-main -main branch
+
+fanpoll-flutter-main  -main branch
+
+fanpoll-web-build-main - this is built version of above same main repos
+
+once downaloded
+
+modify in fluuter build and copy files from web/lib and paste in web buuild and commit both
+
+auto deploy happens
+
+vercel -->
+railway -->
+
+cloudinary --> staic image storing
+
+flutter build web --release
