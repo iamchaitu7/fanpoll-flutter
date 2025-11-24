@@ -18,14 +18,17 @@ class CreatepollController extends GetxController {
   final StringTagController hashtagsChipController = StringTagController();
   final TextEditingController websiteController = TextEditingController();
   var optionControllers = <TextEditingController>[TextEditingController(), TextEditingController()].obs;
-  var pollDurationEnabled = false.obs;
   var selectedDurationDays = 7.obs; // Default 7 days (int instead of double)
-  var notificationsEnabled = true.obs;
 
    var selectedDurationIndex = 4.obs; // Default to 7 Days (index 4)
 
     var selectedTemplate = ''.obs;
   var visibilityEnabled = true.obs;
+     var useCustomDuration = false.obs;
+  var customDurationHours = 0.obs;
+  var customDurationDays = 7.obs;
+  var notificationsEnabled = true.obs;
+  
 
   
   void applyYesNoTemplate() {
@@ -68,28 +71,31 @@ class CreatepollController extends GetxController {
   
   
   
-  // Add this missing method:
   int calculateExpirationDays() {
-    if (!pollDurationEnabled.value) {
-      return 7; // Default 7 days if duration not enabled
-    }
-    
-    // Handle based on selected duration index
-    switch (selectedDurationIndex.value) {
-      case 0: // 1 Hour
-        return 1; // Return at least 1 day
-      case 1: // 6 Hours  
-        return 1; // Return at least 1 day
-      case 2: // 1 Day
-        return 1;
-      case 3: // 3 Days
-        return 3;
-      case 4: // 7 Days
-        return 7;
-      default:
-        return 7;
-    }
+  if (useCustomDuration.value) {
+    // Calculate total hours from custom duration
+    final totalHours = (customDurationDays.value * 24) + customDurationHours.value;
+    // Convert to days (minimum 1 day, maximum 14 days)
+    final days = (totalHours / 24).ceil();
+    return days.clamp(1, 14);
   }
+  
+  // Handle based on selected duration index
+  switch (selectedDurationIndex.value) {
+    case 0: // 1 Hour
+      return 1; // Return at least 1 day
+    case 1: // 6 Hours  
+      return 1; // Return at least 1 day
+    case 2: // 1 Day
+      return 1;
+    case 3: // 3 Days
+      return 3;
+    case 4: // 7 Days
+      return 7;
+    default:
+      return 7;
+  }
+}
   
   Uint8List? webImageBytes;
   final picker = ImagePicker();
@@ -178,7 +184,6 @@ class CreatepollController extends GetxController {
     websiteController.clear();
     hashtagsController.clear();
     selectedImage.value = null;
-    pollDurationEnabled.value = false;
     selectedDurationDays.value = 7.0 as int;
     notificationsEnabled.value = true;
     for (var controller in optionControllers) {
@@ -278,11 +283,11 @@ bool validateForm() {
     return false;
   }
   
-  // Check expiry date - if using date picker OR poll duration
-  if (selectedExpireDate.value == null && !pollDurationEnabled.value) {
-    Get.snackbar('Error', 'Please select an expiry date or enable poll duration');
-    return false;
-  }
+  // // Check expiry date - if using date picker OR poll duration
+  // if (selectedExpireDate.value == null && !pollDurationEnabled.value) {
+  //   Get.snackbar('Error', 'Please select an expiry date or enable poll duration');
+  //   return false;
+  // }
   
   return true;
 }

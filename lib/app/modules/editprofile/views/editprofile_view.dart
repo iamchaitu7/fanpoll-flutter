@@ -253,7 +253,7 @@ class EditprofileView extends GetView<EditprofileController> {
                     controller: controller.bioController,
                     hintText: "Enter Bio",
                     maxLines: 5,
-                    validator: (value) => value!.trim().isEmpty ? 'Bio is required' : null,
+                  //  validator: (value) => value!.trim().isEmpty ? 'Bio is required' : null,
                   ),
                   const SizedBox(height: 16),
                   CustomButton(

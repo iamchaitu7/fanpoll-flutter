@@ -11,17 +11,27 @@ import 'package:web/web.dart' as web;
 
 class Utils {
   static String calculateDaysLeft(String expiresAt) {
-    try {
-      final expiryDate = DateTime.parse(expiresAt);
-      final now = DateTime.now();
+  try {
+    final expiryDate = DateTime.parse(expiresAt);
+    final now = DateTime.now();
 
-      if (expiryDate.isBefore(now)) return "Ended";
-      final difference = expiryDate.difference(now).inDays;
-      return "$difference Days Left";
-    } catch (e) {
-      return "Unknown";
+    if (expiryDate.isBefore(now)) return "Ended";
+    
+    final difference = expiryDate.difference(now);
+    
+    if (difference.inDays > 0) {
+      return "${difference.inDays} Days Left";
+    } else if (difference.inHours > 0) {
+      return "${difference.inHours} Hours Left";
+    } else if (difference.inMinutes > 0) {
+      return "${difference.inMinutes} Minutes Left";
+    } else {
+      return "Less than a minute Left";
     }
+  } catch (e) {
+    return "Unknown";
   }
+}
 
   static formatDate(String dateString) {
     try {

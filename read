@@ -169,3 +169,6 @@ railway -->
 cloudinary --> staic image storing
 
 flutter build web --release
+
+
+git checkout -b main && git remote add origin https://github.com/iamchaitu7/fanpoll-web-build.git && git add . && git commit -m "build: Flutter web deployment" && git push -u origin main

@@ -20,6 +20,7 @@ import '../controllers/createpoll_controller.dart';
 class CreatepollView extends GetView<CreatepollController> {
   CreatepollView({super.key});
 
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -697,53 +698,185 @@ Widget _buildErrorState() {
     );
   }
 
-  Widget _buildPollSettings() {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0x8022212F), width: 0.5),
-      ),
-      child: Column(
-        children: [
-          // Poll Duration
-          _buildSettingItem(
-            title: "Poll Duration",
-            isChecked: controller.pollDurationEnabled.value,
-            onChanged: (value) => controller.pollDurationEnabled.value = value ?? false,
-            child: _buildDurationOptions(),
+ Widget _buildPollSettings() {
+  return Container(
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: const Color(0x8022212F), width: 0.5),
+    ),
+    child: Column(
+      children: [
+        // Poll Duration (always enabled, no checkbox)
+        _buildDurationSection(),
+        const Divider(height: 1),
+        
+        // Notifications only (visibility removed)
+        _buildSettingItem(
+          title: "Notifications",
+          isChecked: controller.notificationsEnabled.value,
+          onChanged: (value) => controller.notificationsEnabled.value = value ?? false,
+          child: Text(
+            "Get notified about votes and comments",
+            style: CustomText.regular14(AppColor.SecondryColor),
           ),
-          const Divider(height: 1),
-          
-          // Visibility
-           // Visibility setting in _buildPollSettings()
-          _buildSettingItemWithIcon(
-            icon: Icons.visibility,
-            title: "Visibility",
-            isActive: controller.visibilityEnabled.value,
-            onChanged: (value) => controller.visibilityEnabled.value = value ?? false,
-            child: Text(
-              controller.visibilityEnabled.value 
-                  ? "Anyone can see and vote" 
-                  : "Only you can see",
-              style: CustomText.regular14(AppColor.SecondryColor),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _buildDurationOptions() {
+  final durations = [
+    {'label': '1 Hour', 'days': 0},
+    {'label': '6 Hours', 'days': 0},
+    {'label': '1 Day', 'days': 1},
+    {'label': '3 Days', 'days': 3},
+    {'label': 'Custom', 'days': 0}, // Add custom option
+  ];
+
+  return Wrap(
+    spacing: 8,
+    runSpacing: 8,
+    children: durations.asMap().entries.map((entry) {
+      final index = entry.key;
+      final duration = entry.value;
+      final isSelected = controller.selectedDurationIndex.value == index;
+      final isCustom = duration['label'] == 'Custom';
+      
+      return GestureDetector(
+        onTap: () {
+          controller.selectedDurationIndex.value = index;
+          if (!isCustom) {
+            controller.useCustomDuration.value = false;
+            controller.selectedDurationDays.value = duration['days'] as int;
+          } else {
+            controller.useCustomDuration.value = true;
+          }
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: isSelected ? AppColor.PrimaryColor : Colors.transparent,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: isSelected ? AppColor.PrimaryColor : const Color(0x8022212F),
+            ),
+          ),
+          child: Text(
+            duration['label'] as String,
+            style: CustomText.regular14(
+              isSelected ? Colors.white : AppColor.SecondryColor,
+            ),
+          ),
+        ),
+      );
+    }).toList(),
+  );
+}
+
+Widget _buildCustomDurationOption() {
+  return Obx(() {
+    if (!controller.useCustomDuration.value) return const SizedBox();
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Custom Duration (Max 14 days)",
+          style: CustomText.semiBold12(AppColor.SecondryColor),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Days", style: CustomText.regular12(AppColor.SecondryColor)),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: const Color(0x8022212F), width: 0.5),
+                    ),
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      initialValue: controller.customDurationDays.value.toString(),
+                      onChanged: (value) {
+                        final days = int.tryParse(value) ?? 0;
+                        controller.customDurationDays.value = days.clamp(0, 14);
+                      },
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        border: InputBorder.none,
+                        hintText: "0-14",
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          const Divider(height: 1),
-          
-          // Notifications
-          _buildSettingItem(
-            title: "Notifications",
-            isChecked: controller.notificationsEnabled.value,
-            onChanged: (value) => controller.notificationsEnabled.value = value ?? false,
-            child: Text(
-              "Get notified about votes and comments",
-              style: CustomText.regular14(AppColor.SecondryColor),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Hours", style: CustomText.regular12(AppColor.SecondryColor)),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: const Color(0x8022212F), width: 0.5),
+                    ),
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      initialValue: controller.customDurationHours.value.toString(),
+                      onChanged: (value) {
+                        final hours = int.tryParse(value) ?? 0;
+                        controller.customDurationHours.value = hours.clamp(0, 23);
+                      },
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        border: InputBorder.none,
+                        hintText: "0-23",
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Obx(() {
+          final totalHours = (controller.customDurationDays.value * 24) + controller.customDurationHours.value;
+          final totalDays = (totalHours / 24).ceil();
+          return Text(
+            "Total: $totalDays day${totalDays != 1 ? 's' : ''}",
+            style: CustomText.regular12(totalDays > 14 ? Colors.red : AppColor.SecondryColor),
+          );
+        }),
+      ],
     );
-  }
+  });
+}
+
+Widget _buildDurationSection() {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Poll Duration",
+          style: CustomText.semiBold14(AppColor.SecondryColor),
+        ),
+        const SizedBox(height: 12),
+        _buildDurationOptions(),
+        const SizedBox(height: 12),
+        _buildCustomDurationOption(),
+      ],
+    ),
+  );
+}
 
   Widget _buildSettingItemWithIcon({
   required IconData icon,
@@ -818,48 +951,7 @@ Widget _buildErrorState() {
     );
   }
 
-  Widget _buildDurationOptions() {
-  final durations = [
-    {'label': '1 Hour', 'days': 0}, // Use 0 for hours, we'll handle conversion
-    {'label': '6 Hours', 'days': 0},
-    {'label': '1 Day', 'days': 1},
-    {'label': '3 Days', 'days': 3},
-    {'label': '7 Days', 'days': 7},
-  ];
-
-     return Wrap(
-    spacing: 8,
-    runSpacing: 8,
-    children: durations.asMap().entries.map((entry) {
-      final index = entry.key;
-      final duration = entry.value;
-      final isSelected = controller.selectedDurationIndex.value == index;
-      
-      return GestureDetector(
-        onTap: () {
-          controller.selectedDurationIndex.value = index;
-          controller.selectedDurationDays.value = duration['days'] as int;
-        },
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(
-            color: isSelected ? AppColor.PrimaryColor : Colors.transparent,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: isSelected ? AppColor.PrimaryColor : const Color(0x8022212F),
-            ),
-          ),
-          child: Text(
-            duration['label'] as String,
-            style: CustomText.regular14(
-              isSelected ? Colors.white : AppColor.SecondryColor,
-            ),
-          ),
-        ),
-      );
-    }).toList(),
-  );
-}
+  
 
 Widget _buildPublishButton() {
   return Obx(() => CustomButton(
