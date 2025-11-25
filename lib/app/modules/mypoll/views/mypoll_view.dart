@@ -165,7 +165,7 @@ class PollCard extends StatelessWidget {
            InkWell(
             onTap: () {
               print("✅ Share triggered successfully-111");
-              final link = "https://fanpoll.app/poll/${pollId ?? 0}";
+              final link = "https://fanpollworld.com/poll/${pollId ?? 0}";
                try {
       Share.share("Check this poll! $link");
       print("✅ Share triggered successfully");

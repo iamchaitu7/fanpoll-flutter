@@ -811,7 +811,7 @@ class _PollCardState extends State<PollCard> {
           InkWell(
             onTap: () {
               print("✅ Share triggered successfully");
-              final link = "https://fanpoll.app/poll/${widget.poll_id}";
+              final link = "https://fanpollworld.com/poll/${widget.poll_id}";
               try {
                 Share.share("Check this poll! $link");
                 print("✅ Share triggered successfully");
@@ -908,7 +908,7 @@ class _PollCardState extends State<PollCard> {
           InkWell(
             onTap: () {
               print("✅ Share triggered successfully");
-              final link = "https://fanpoll.app/poll/${widget.poll_id}";
+              final link = "https://fanpollworld.com/poll/${widget.poll_id}";
               try {
                 Share.share("Check this poll! $link");
                 print("✅ Share triggered successfully");
