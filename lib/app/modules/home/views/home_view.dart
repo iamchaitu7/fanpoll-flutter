@@ -303,6 +303,7 @@ class PollCard extends StatefulWidget {
   final bool isPast;
   final bool can_vote;
   final bool is_own_poll;
+  final bool isGuest;
   final VoidCallback onLike;
   final VoidCallback? onDelete;
   final VoidCallback? onUpdateOption;
@@ -326,6 +327,7 @@ class PollCard extends StatefulWidget {
     required this.can_vote,
     required this.isPast,
     required this.is_own_poll,
+    this.isGuest = false,
     this.onDelete,
     this.onUpdateOption,
     required this.isLiked,
@@ -373,6 +375,36 @@ class _PollCardState extends State<PollCard> {
 
   void selectOption(int index) {
     selectedIndex.value = index;
+  }
+
+  void _showLoginDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Login Required'),
+        content: const Text('You need to login to vote on this poll.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Get.toNamed('/login');
+            },
+            child: const Text('Login'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Get.toNamed('/register');
+            },
+            child: const Text('Register'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -628,6 +660,10 @@ class _PollCardState extends State<PollCard> {
                                     return GestureDetector(
                                       onTap: () async {
                                         if (selectedIndex.value == null) {
+                                          if (widget.isGuest) {
+                                            _showLoginDialog();
+                                            return;
+                                          }
                                           selectOption(index);
                                           poll_id.value = widget.poll_id;
                                           option_id.value = widget.options[index].id;

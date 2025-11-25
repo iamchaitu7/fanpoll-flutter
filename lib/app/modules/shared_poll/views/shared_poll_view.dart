@@ -188,6 +188,7 @@ class _SharedPollViewState extends State<SharedPollView> {
                 isPast: !isPollActive,
                 can_vote: isPollActive && !widget.isGuest && (poll.canVote ?? true),
                 is_own_poll: poll.isOwnPoll ?? false,
+                isGuest: widget.isGuest,
                 isLiked: poll.isLiked ?? false,
                 onLike: () {
                   if (widget.isGuest) {
