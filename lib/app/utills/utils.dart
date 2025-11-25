@@ -34,11 +34,14 @@ class Utils {
 }
 
   static formatDate(String dateString) {
+    if (dateString.isEmpty) {
+      return "Unknown date";
+    }
     try {
       final dateTime = DateTime.parse(dateString);
       return DateFormat("d MMM, yyyy").format(dateTime);
     } catch (e) {
-      return "Invalid date";
+      return "Unknown date";
     }
   }
 

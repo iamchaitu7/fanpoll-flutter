@@ -34,6 +34,8 @@ import '../modules/register/views/register_view.dart';
 import '../modules/search/views/search_view.dart';
 import '../modules/setting/bindings/setting_binding.dart';
 import '../modules/setting/views/setting_view.dart';
+import '../modules/shared_poll/bindings/shared_poll_binding.dart';
+import '../modules/shared_poll/views/shared_poll_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
 
@@ -191,6 +193,19 @@ class AppPages {
       transition: Transition.rightToLeftWithFade,
       transitionDuration: Duration(milliseconds: 400),
       middlewares: [AuthGuard()],
+    ),
+    GetPage(
+      name: _Paths.SHAREDPOLL,
+      page: () {
+        final args = Get.arguments as Map<String, dynamic>;
+        return SharedPollView(
+          pollId: args['pollId'],
+          isGuest: args['isGuest'] ?? false,
+        );
+      },
+      binding: SharedPollBinding(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 400),
     ),
   ];
 }

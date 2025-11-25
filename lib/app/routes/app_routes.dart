@@ -22,6 +22,7 @@ abstract class Routes {
   static const FOLLOWERS = _Paths.FOLLOWERS;
   static const SEARCH = _Paths.SEARCH;
   static const MYPOLLDETAILS = _Paths.MYPOLLDETAILS;
+  static const SHAREDPOLL = _Paths.SHAREDPOLL;
 }
 
 abstract class _Paths {
@@ -43,4 +44,5 @@ abstract class _Paths {
   static const FOLLOWERS = '/followers';
   static const SEARCH = '/search';
   static const MYPOLLDETAILS = '/mypolldetails';
+  static const SHAREDPOLL = '/shared-poll';
 }

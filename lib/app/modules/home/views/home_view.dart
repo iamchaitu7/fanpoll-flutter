@@ -306,6 +306,8 @@ class PollCard extends StatefulWidget {
   final VoidCallback onLike;
   final VoidCallback? onDelete;
   final VoidCallback? onUpdateOption;
+  final VoidCallback? onComment;
+  final VoidCallback? onFollow;
 
   const PollCard({
     super.key,
@@ -329,6 +331,8 @@ class PollCard extends StatefulWidget {
     required this.isLiked,
     required this.onLike,
     required this.likesCount,
+    this.onComment,
+    this.onFollow,
   });
 
   @override
@@ -460,6 +464,10 @@ class _PollCardState extends State<PollCard> {
                               )
                             : TextButton(
                                 onPressed: () async {
+                                  if (widget.onFollow != null) {
+                                    widget.onFollow!();
+                                    return;
+                                  }
                                   if (widget.creator.isFollowing ?? false) {
                                     await homeController.onUnFollow(widget.creator.id ?? 0);
                                     setState(() {
@@ -758,10 +766,16 @@ class _PollCardState extends State<PollCard> {
           ),
           Container(height: 61, width: 1, color: AppColor.LightGrayColor),
           InkWell(
-            onTap: () => Get.toNamed(
-              "/comment",
-              arguments: {"poll_id": poll_id},
-            ),
+            onTap: () {
+              if (widget.onComment != null) {
+                widget.onComment!();
+              } else {
+                Get.toNamed(
+                  "/comment",
+                  arguments: {"poll_id": poll_id},
+                );
+              }
+            },
             child: Row(
               children: [
                 SvgPicture.string(
@@ -810,13 +824,11 @@ class _PollCardState extends State<PollCard> {
           Container(height: 61, width: 1, color: AppColor.LightGrayColor),
           InkWell(
             onTap: () {
-              print("✅ Share triggered successfully");
-              final link = "https://fanpollworld.com/poll/${widget.poll_id}";
+              final link = "https://fanpollworld.com/share/poll/${widget.poll_id}";
               try {
                 Share.share("Check this poll! $link");
-                print("✅ Share triggered successfully");
               } catch (e) {
-                print("❌ Error while sharing: $e");
+                print("Error while sharing: $e");
               }
             },
             child: Row(
@@ -877,10 +889,16 @@ class _PollCardState extends State<PollCard> {
           ),
           Container(height: 61, width: 1, color: AppColor.LightGrayColor),
           InkWell(
-            onTap: () => Get.toNamed(
-              "/comment",
-              arguments: {"poll_id": poll_id},
-            ),
+            onTap: () {
+              if (widget.onComment != null) {
+                widget.onComment!();
+              } else {
+                Get.toNamed(
+                  "/comment",
+                  arguments: {"poll_id": poll_id},
+                );
+              }
+            },
             child: Row(
               children: [
                 SvgPicture.string(
@@ -907,13 +925,11 @@ class _PollCardState extends State<PollCard> {
           Container(height: 61, width: 1, color: AppColor.LightGrayColor),
           InkWell(
             onTap: () {
-              print("✅ Share triggered successfully");
-              final link = "https://fanpollworld.com/poll/${widget.poll_id}";
+              final link = "https://fanpollworld.com/share/poll/${widget.poll_id}";
               try {
                 Share.share("Check this poll! $link");
-                print("✅ Share triggered successfully");
               } catch (e) {
-                print("❌ Error while sharing: $e");
+                print("Error while sharing: $e");
               }
             },
             child: Row(

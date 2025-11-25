@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import 'localStorageService.dart';
+import '../models/models.dart';
 
 class ApiService {
   //static final String baseUrl = 'https://fpw.zbit.ltd/api/';
@@ -443,6 +444,54 @@ class ApiService {
     );
 
     return jsonDecode(response.body);
+  }
+
+  Future<PollModel?> getPollById(int pollId, {String? token}) async {
+    try {
+      final uri = Uri.parse('${baseUrl}poll/$pollId');
+      final headers = {
+        'Content-Type': 'application/json',
+        'Cookie': 'fpw_zbt=6p0ijcojqckn4blvrdag47ladcmb8vp9',
+      };
+      
+      if (token != null && token.isNotEmpty) {
+        headers['Authorization'] = 'Bearer $token';
+      }
+
+      print('GetPollById: Fetching from URL: $uri');
+      final response = await http.get(uri, headers: headers);
+      print('GetPollById: Status code: ${response.statusCode}');
+      print('GetPollById: Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final responseBody = jsonDecode(response.body);
+        print('GetPollById: Decoded response: $responseBody');
+        
+        if (responseBody['status'] == 200 && responseBody['data'] != null) {
+          final data = responseBody['data'];
+          final pollData = data is Map ? (data['poll'] ?? data) : null;
+          
+          print('GetPollById: Poll data: $pollData');
+          
+          if (pollData != null) {
+            print('GetPollById: Creating PollModel from data');
+            return PollModel.fromJson(pollData);
+          } else {
+            print('GetPollById: Poll data is null');
+            return null;
+          }
+        } else {
+          print('GetPollById: Invalid response structure');
+          return null;
+        }
+      } else {
+        print('GetPollById: Non-200 status code');
+        return null;
+      }
+    } catch (e) {
+      print('GetPollById Error: $e');
+      return null;
+    }
   }
 
   /// PUT/UPDATE Request

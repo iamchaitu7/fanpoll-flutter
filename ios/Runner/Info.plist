@@ -4,6 +4,10 @@
 <dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_fanpollworld._tcp</string>
+	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -28,6 +32,14 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>com.googleusercontent.apps.301803721911-mhi1e68ujjn4cqurpd2qfj1oajfgko65</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>fanpollworld</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fanpollworld</string>
 			</array>
 		</dict>
 	</array>

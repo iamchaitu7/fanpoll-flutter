@@ -10,6 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'app/modules/main/controllers/main_controller.dart';
+import 'app/utills/url_handler_service.dart';
 import 'app/routes/app_pages.dart';
 import 'firebase_options.dart';
 
@@ -17,11 +18,13 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   LocalStorageService.init();
+  Get.put(UrlHandlerService());
   // Initialize Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   setupPushNotifications();
+  setupDeepLinking();
   runApp(
     ScreenUtilInit(
       enableScaleWH: () {
@@ -99,6 +102,40 @@ Future<void> setupPushNotifications() async {
     final MainController mainController = Get.find<MainController>();
     mainController.changeTabIndex(3);
   });
+}
+
+String? initialDeepLink;
+bool deepLinkProcessed = false;
+
+void setupDeepLinking() {
+  if (kIsWeb) {
+    final currentUrl = Uri.base.toString();
+    if (currentUrl.contains('/share/poll/') || currentUrl.contains('/poll/')) {
+      initialDeepLink = currentUrl;
+      deepLinkProcessed = false;
+    }
+  }
+}
+
+void _handleDeferredWebDeepLink() {
+  if (initialDeepLink != null && !deepLinkProcessed) {
+    deepLinkProcessed = true;
+    print('Main: Deep link handler called for: $initialDeepLink');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (Get.context != null) {
+        print('Main: Processing deep link...');
+        final deepLinkUrl = initialDeepLink;
+        initialDeepLink = null;
+        try {
+          UrlHandlerService.to.handleSharedUrl(deepLinkUrl!);
+        } catch (e) {
+          print('Error in deep link handling: $e');
+        }
+      } else {
+        print('Main: Get.context is null, retrying...');
+      }
+    });
+  }
 }
 
 // void showNotification(RemoteMessage message) {
