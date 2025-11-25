@@ -39,8 +39,7 @@ class UrlHandlerService {
 
     print("User logged in: $isLoggedIn, Navigating to shared poll: $pollId");
 
-    Get.offAllNamed('/shared-poll', arguments: {
-      'pollId': pollId,
+    Get.offAllNamed('/shared-poll/$pollId', arguments: {
       'isGuest': !isLoggedIn,
     });
   }

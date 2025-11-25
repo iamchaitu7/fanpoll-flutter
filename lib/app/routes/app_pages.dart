@@ -197,10 +197,13 @@ class AppPages {
     GetPage(
       name: _Paths.SHAREDPOLL,
       page: () {
+        final pollIdStr = Get.parameters['pollId'] ?? '0';
+        final pollId = int.tryParse(pollIdStr) ?? 0;
         final args = Get.arguments as Map<String, dynamic>?;
+        final isGuest = args?['isGuest'] ?? true;
         return SharedPollView(
-          pollId: args?['pollId'] ?? 0,
-          isGuest: args?['isGuest'] ?? false,
+          pollId: pollId,
+          isGuest: isGuest,
         );
       },
       binding: SharedPollBinding(),

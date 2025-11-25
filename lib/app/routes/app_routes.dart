@@ -44,5 +44,5 @@ abstract class _Paths {
   static const FOLLOWERS = '/followers';
   static const SEARCH = '/search';
   static const MYPOLLDETAILS = '/mypolldetails';
-  static const SHAREDPOLL = '/shared-poll';
+  static const SHAREDPOLL = '/shared-poll/:pollId';
 }
