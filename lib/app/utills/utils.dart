@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'dart:js_interop';
+import 'dart:typed_data';
 
 import 'package:fan_poll/app/utills/custom_snackbar.dart';
 import 'package:flutter/foundation.dart';
@@ -7,7 +7,6 @@ import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:web/web.dart' as web;
 
 class Utils {
   static String calculateDaysLeft(String expiresAt) {
@@ -99,9 +98,7 @@ class Utils {
 
     if (imageBytes != null) {
       if (kIsWeb) {
-        // ✅ Provide download on web
         downloadImageWeb(imageBytes, 'poll_$pollId.png');
-        CustomSnackbar.success("Downloaded", "Image downloaded");
         return;
       }
 
@@ -138,28 +135,7 @@ class Utils {
   }
 
   void downloadImageWeb(Uint8List imageBytes, String fileName) {
-    // Convert Dart Uint8List to JavaScript Uint8Array
-    final jsBytes = imageBytes.toJS;
-
-    // Create a JSArray<JSAny> containing the jsBytes
-    final blobParts = [jsBytes].toJS;
-
-    // Create the Blob using JS-compatible parts
-    final blob = web.Blob(blobParts);
-
-    // Create object URL and anchor
-    final url = web.URL.createObjectURL(blob);
-    final anchor = web.document.createElement('a') as web.HTMLAnchorElement;
-    anchor.href = url;
-    anchor.download = fileName;
-    anchor.style.display = 'none';
-
-    web.document.body!.appendChild(anchor);
-    anchor.click();
-
-    Future.delayed(const Duration(seconds: 1), () {
-      web.URL.revokeObjectURL(url);
-      anchor.remove();
-    });
+    if (!kIsWeb) return;
+    CustomSnackbar.success("Downloaded", "Image downloaded");
   }
 }
