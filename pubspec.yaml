@@ -62,7 +62,7 @@ dependencies:
     chips_choice: ^3.0.1
 
     firebase_messaging: ^15.2.10
-    web: ^1.1.1
+    web: ^1.0.0
     share_plus: ^10.0.0
 
 dev_dependencies:
